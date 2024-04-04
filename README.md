@@ -19,21 +19,21 @@ Ngoài ra, Ứng dụng này được sử dụng các công nghệ mới nhất
 ### :data (Data layer)
 
  3rd party libraries and technologies used:
-  - [Hilt](https://developer.android.com/training/dependency-injection/hilt-android) for dependencies injection
-  - [Kotlin flows](https://developer.android.com/kotlin/flow) // để load dữ liệu bất đồng bộ
-  - [Room](https://developer.android.com/training/data-storage/room) lưu trữ database
-  - [Retrofit](https://square.github.io/retrofit/) dùng để request HTTP và đọc các định dạng dữ liệu Json XML và ProtoBuf
-  - [OkHttp](https://square.github.io/okhttp/) dùng cho việc kết nối API server
-  - [Jsoup](https://jsoup.org/)
+  - [Hilt](https://developer.android.com/training/dependency-injection/hilt-android) Dùng để tạo và quản lý các dependencies injection
+  - [Kotlin flows](https://developer.android.com/kotlin/flow) Dùng để load dữ liệu bất đồng bộ
+  - [Room](https://developer.android.com/training/data-storage/room) Lưu trữ database
+  - [Retrofit](https://square.github.io/retrofit/) Dùng để request HTTP và đọc các định dạng dữ liệu Json XML và ProtoBuf
+  - [OkHttp](https://square.github.io/okhttp/) Dùng cho việc kết nối API server
+  - [Jsoup](https://jsoup.org/) Chuyển đổi chuỗi thành một đối tượng đạng Document để truy cập các thuộc tính của chuỗi
 
  Features:
-  - [Database](/data/src/main/java/com/trungkieu/data/database) // Tạo và kết nối database
+  - [Database](/data/src/main/java/com/trungkieu/data/database) Tạo và kết nối database
   - [DI Modules](/data/src/main/java/com/trungkieu/data/di) Thực hiện các class có annotation kiểu module để taopj các dependency injection
-  - [Interactor](/data/src/main/java/com/trungkieu/data/features/poi/interactor) giao tiếp với tầng UI
-  - [Data level models](/data/src/main/java/com/trungkieu/data/features/poi/model) các kiểu model dùng để truyền dữ liệu trong tầng data
-  - [DAO](/data/src/main/java/com/trungkieu/data/features/poi/dao) : Viết các câu lệnh SQL
+  - [Interactor](/data/src/main/java/com/trungkieu/data/features/poi/interactor) Giao tiếp với tầng UI
+  - [Data level models](/data/src/main/java/com/trungkieu/data/features/poi/model) Các kiểu model dùng để truyền dữ liệu trong tầng data
+  - [DAO](/data/src/main/java/com/trungkieu/data/features/poi/dao) Viết các câu lệnh SQL
   - [Data sources](/data/src/main/java/com/trungkieu/data/features/poi/datasource) Gọi các interface có annotation DAO để thực thi câu lệnh SQL
-  - [Network calls](/data/src/main/java/com/trungkieu/data/features/poi/api) : Kết nối network
+  - [Network calls](/data/src/main/java/com/trungkieu/data/features/poi/api) Kết nối network
 
 ### :app (UI layer)
 
