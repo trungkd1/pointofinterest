@@ -47,3 +47,4 @@ Ngoài ra, Ứng dụng này được sử dụng các công nghệ mới nhất
   - [Hilt](https://developer.android.com/training/dependency-injection/hilt-android) for dependencies injection
   - [Kotlin flows](https://developer.android.com/kotlin/flow) dùng để xử lý các luồng dữ liệu bất đồng bộ. 
 
+![Alt text](screenshots/flow.png?raw=true "Banner")
