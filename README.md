@@ -44,7 +44,7 @@ Ngoài ra, Ứng dụng này được sử dụng các công nghệ mới nhất
   - [Splash Screen Api](https://developer.android.com/develop/ui/views/launch/splash-screen) màn hình hiển thị sản phẩm trước khi vào màn hình chính
   - [Coil for Compose](https://coil-kt.github.io/coil/compose/) dùng để load hình ảnh
   - [Flow layout](https://google.github.io/accompanist/flowlayout/) là layout manager trong Android được sử dụng để sắp xếp các view từ trài qua phải từ trên xuống dưới.
-  - [Hilt](https://developer.android.com/training/dependency-injection/hilt-android) for dependencies injection
+  - [Hilt](https://developer.android.com/training/dependency-injection/hilt-android) Dùng để tạo và quản lý các dependencies injection
   - [Kotlin flows](https://developer.android.com/kotlin/flow) dùng để xử lý các luồng dữ liệu bất đồng bộ. 
 
 ![Alt text](screenshots/flow.png?raw=true "Banner")
