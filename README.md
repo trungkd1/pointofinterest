@@ -21,7 +21,7 @@ Ngoài ra, Ứng dụng này được sử dụng các công nghệ mới nhất
  3rd party libraries and technologies used:
   - [Hilt](https://developer.android.com/training/dependency-injection/hilt-android) Dùng để tạo và quản lý các dependencies injection
   - [Kotlin flows](https://developer.android.com/kotlin/flow) Dùng để load dữ liệu bất đồng bộ
-  - [Room](https://developer.android.com/training/data-storage/room) Lưu trữ database
+  - [Room](https://developer.android.com/training/data-storage/room) Là một thư viện dùng để thao tác CSDL
   - [Retrofit](https://square.github.io/retrofit/) Dùng để request HTTP và đọc các định dạng dữ liệu Json XML và ProtoBuf
   - [OkHttp](https://square.github.io/okhttp/) Dùng cho việc kết nối API server
   - [Jsoup](https://jsoup.org/) Chuyển đổi chuỗi thành một đối tượng đạng Document để truy cập các thuộc tính của chuỗi
