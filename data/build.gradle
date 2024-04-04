@@ -1,0 +1,104 @@
+plugins {
+    id 'kotlin-kapt'
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'com.google.dagger.hilt.android'
+    id "com.google.protobuf" version "0.8.12"
+    id "com.google.devtools.ksp" version "1.7.21-1.0.8"
+}
+
+android {
+    namespace 'com.trungkieu.data'
+    compileSdk 33
+
+//    testOptions {
+//        unitTests {
+//            includeAndroidResources = true
+//        }
+//    }
+
+    defaultConfig {
+        minSdk 24
+        targetSdk 33
+
+        testInstrumentationRunner "com.trungkieu.data.PoiTestRunner"
+        consumerProguardFiles "consumer-rules.pro"
+
+        kapt {
+            arguments {
+                arg("room.schemaLocation", "$projectDir/schemas")
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.21.9"
+    }
+
+    generateProtoTasks {
+        all().each { task ->
+            task.builtins {
+                java {
+                    option 'lite'
+                }
+                kotlin {
+                    option 'lite'
+                }
+            }
+        }
+    }
+}
+
+dependencies {
+
+    implementation libs.androidx.core.ktx
+    implementation libs.androidx.appcompat
+    implementation libs.coroutines
+
+    implementation libs.hilt
+    kapt libs.hilt.compiler
+
+    implementation libs.room.runtime
+    implementation libs.room.ktx
+    kapt libs.room.compiler
+
+    implementation libs.retrofit
+    implementation libs.retrofit.converter.gson
+    implementation libs.okhttp.logging
+    implementation libs.okhttp
+    implementation libs.google.gson
+
+    implementation libs.jsoup
+
+    implementation libs.androidx.datastore
+    implementation libs.google.protobuf.kotlin
+
+    implementation libs.kotlinx.datetime
+
+    implementation libs.androidx.test.runner
+
+//    testImplementation libs.mockito.core
+//    testImplementation libs.mockito.inline
+//    testImplementation libs.kotlinx.coroutines.test
+//    testImplementation libs.kotlin.test.junit
+//    testImplementation libs.junit
+//    testImplementation libs.hilt.testing
+//    testImplementation libs.robolectric
+//    kaptTest libs.hilt.compiler
+}
