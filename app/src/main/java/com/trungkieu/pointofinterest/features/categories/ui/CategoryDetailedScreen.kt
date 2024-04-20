@@ -25,7 +25,6 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.trungkieu.pointofinterest.R
 import com.trungkieu.pointofinterest.features.categories.ui.composable.GridColorPalette
@@ -43,7 +42,7 @@ import com.trungkieu.pointofinterest.ui.composables.uistates.ProgressView
  * @param onBack
  * @receiver
  */
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalLifecycleComposeApi::class)
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun CategoriesDetailedScreen(
     categoryId: String?,

@@ -6,12 +6,12 @@ plugins {
 }
 
 android {
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.trungkieu.pointofinterest"
         minSdk 26
-        targetSdk 33
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 
@@ -123,6 +123,7 @@ dependencies {
 
     implementation libs.hilt
     implementation libs.hilt.work.manager
+    implementation project(path: ':Domain')
     implementation project(path: ':data')
     kapt libs.hilt.compiler
     kapt libs.hilt.compiler.androidx

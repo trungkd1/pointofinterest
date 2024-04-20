@@ -33,7 +33,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.flowlayout.FlowRow
 import com.trungkieu.pointofinterest.R
@@ -53,7 +52,7 @@ import com.trungkieu.pointofinterest.features.poi.create.vm.WizardSuggestionUiSt
 import com.trungkieu.pointofinterest.ui.composables.uikit.*
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalLifecycleComposeApi::class)
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun CreatePoiScreen(
     onCloseScreen: () -> Unit,
@@ -91,7 +90,7 @@ fun CreatePoiScreen(
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalLifecycleComposeApi::class)
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun CreatePoiWizardScreen(
     sharedContent: String?,
@@ -341,7 +340,6 @@ fun CreatePoiFormScreen(
     }
 }
 
-@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun CategoriesSelectionBottomSheet(
     viewModel: CreatePoiViewModel,

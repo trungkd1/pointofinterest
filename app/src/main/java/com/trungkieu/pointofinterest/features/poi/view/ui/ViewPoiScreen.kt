@@ -28,7 +28,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.trungkieu.pointofinterest.R
 import com.trungkieu.pointofinterest.core.utils.chromeTabsIntent
@@ -42,7 +41,7 @@ import com.trungkieu.pointofinterest.ui.composables.uikit.ActionButton
 import com.trungkieu.pointofinterest.ui.composables.uikit.PoiFilledTextField
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalLifecycleComposeApi::class, ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun ViewPoiScreen(
     appState: PoiAppState,

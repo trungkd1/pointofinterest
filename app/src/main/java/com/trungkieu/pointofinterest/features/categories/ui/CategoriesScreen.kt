@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.trungkieu.pointofinterest.features.categories.ui.composable.CategoryTypeHeader
 import com.trungkieu.pointofinterest.features.categories.ui.composable.CategoryView
@@ -37,7 +36,6 @@ import kotlinx.coroutines.launch
  * @param onNavigate : truyền một callback điều hướng
  * @receiver
  */
-@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun CategoriesScreen(
     snackbarHostState: SnackbarHostState,

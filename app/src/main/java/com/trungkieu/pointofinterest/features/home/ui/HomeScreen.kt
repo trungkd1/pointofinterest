@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.trungkieu.pointofinterest.R
 import com.trungkieu.pointofinterest.core.utils.containsId
@@ -38,7 +37,6 @@ import com.trungkieu.pointofinterest.ui.composables.uistates.EmptyView
 import com.trungkieu.pointofinterest.ui.composables.uistates.ErrorView
 import com.trungkieu.pointofinterest.ui.composables.uistates.ProgressView
 
-@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun HomeScreen(
     // Giao diện màn hình home với các parameter được truyền vào

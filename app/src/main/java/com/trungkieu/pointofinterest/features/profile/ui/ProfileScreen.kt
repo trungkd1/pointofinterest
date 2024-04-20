@@ -33,7 +33,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.SubcomposeAsyncImage
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -49,7 +48,6 @@ import com.trungkieu.pointofinterest.navigation.Screen
 import com.trungkieu.pointofinterest.ui.composables.uikit.PulsingProgressBar
 import com.trungkieu.pointofinterest.ui.theme.PointOfInterestTheme
 
-@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun ProfileScreen(
     vm: ProfileViewModel = hiltViewModel(),

@@ -16,7 +16,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.trungkieu.pointofinterest.R
 import com.trungkieu.pointofinterest.features.home.ui.PoiListContent
@@ -25,7 +24,6 @@ import com.trungkieu.pointofinterest.features.search.vm.SearchScreenUiState
 import com.trungkieu.pointofinterest.features.search.vm.SearchVm
 import com.trungkieu.pointofinterest.navigation.Screen
 
-@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun SearchScreen(
     appState: PoiAppState,

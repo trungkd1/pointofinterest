@@ -43,6 +43,10 @@ kotlinTestVersion = "1.7.20"
 testRunner = "1.5.2"
 turbineVersion = "0.12.1"
 robolectricVersion = "4.9"
+agp = "7.4.0"
+org-jetbrains-kotlin-android = "1.7.20"
+kotlin-bom = "1.8.0"
+material = "1.11.0"
 
 [libraries]
 
@@ -103,5 +107,9 @@ kotlin-test-junit = { group = "org.jetbrains.kotlin", name = "kotlin-test-junit"
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbineVersion" }
 androidx-work-manager-testing = { group = "androidx.work", name = "work-testing", version.ref = "workManagerVersion" }
 robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectricVersion" }
+kotlin-bom = { group = "org.jetbrains.kotlin", name = "kotlin-bom", version.ref = "kotlin-bom" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 [plugins]
+com-android-library = { id = "com.android.library", version.ref = "agp" }
+org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "org-jetbrains-kotlin-android" }
