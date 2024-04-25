@@ -69,12 +69,12 @@ fun SearchContent(
         } else if (state.second is SearchScreenUiState.NothingFound) {
             EmptySearch(stringResource(id = R.string.message_search_empty_result))
         } else if (state.second is SearchScreenUiState.SearchResult) {
-            PoiListContent((state.second as SearchScreenUiState.SearchResult).result) { id ->
-                onNavigate(
-                    Screen.ViewPoiDetailed,
-                    listOf(Screen.ViewPoiDetailed.ARG_POI_ID to id)
-                )
-            }
+            PoiListContent(poiItems = (state.second as SearchScreenUiState.SearchResult).result,
+                    onPoiSelected = {id ->
+                        onNavigate(Screen.ViewPoiDetailed, listOf(Screen.ViewPoiDetailed.ARG_POI_ID to id))
+                    },
+                    onRemove = {}
+                    )
         }
     }
 }

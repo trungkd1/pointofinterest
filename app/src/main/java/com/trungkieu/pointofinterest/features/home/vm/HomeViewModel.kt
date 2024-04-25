@@ -3,7 +3,10 @@ package com.trungkieu.pointofinterest.features.home.vm
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.trungkieu.data.features.categories.model.PoiModel
 import com.trungkieu.domain.features.categories.interactor.GetCategoriesByIdsUseCase
+import com.trungkieu.domain.features.poi.interactor.DeletePoiUseCase
+import com.trungkieu.domain.features.poi.interactor.GetDetailedPoiUseCase
 import com.trungkieu.domain.features.poi.interactor.GetPoiListUseCase
 import com.trungkieu.domain.features.poi.interactor.GetUsedCategoriesUseCase
 import com.trungkieu.pointofinterest.core.utils.ErrorDisplayObject
@@ -14,11 +17,13 @@ import com.trungkieu.pointofinterest.features.categories.ui.models.toUiModel
 import com.trungkieu.pointofinterest.features.home.ui.models.PoiListItem
 import com.trungkieu.pointofinterest.features.home.ui.models.PoiSortByUiOption
 import com.trungkieu.pointofinterest.features.home.ui.models.toDomain
+import com.trungkieu.pointofinterest.features.home.ui.models.toListDataModel
 import com.trungkieu.pointofinterest.features.home.ui.models.toListUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -39,6 +44,8 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     getUsedCategoriesUseCase: GetUsedCategoriesUseCase,
+    private val deletePoiUseCase: DeletePoiUseCase,
+    private val getDetailedPoiUseCase: GetDetailedPoiUseCase,
     private val getCategoriesUseCase: GetCategoriesByIdsUseCase,
     private val getPoiListUseCase: GetPoiListUseCase
 ) : ViewModel() {
@@ -113,6 +120,14 @@ class HomeViewModel @Inject constructor(
     /** On retry */
     fun onRetry() {
         retryTrigger.retry()
+    }
+
+    fun onDeletePoi(item: PoiListItem) {
+        // to do : need to convert from PoiListItem to PoiModel to carry out deletePoiUseCase
+        viewModelScope.launch {
+           val modelState =  getDetailedPoiUseCase(GetDetailedPoiUseCase.Params(item.id))
+            deletePoiUseCase(DeletePoiUseCase.Params(modelState))
+        }
     }
 
     /**

@@ -1,16 +1,33 @@
+@file:OptIn(ExperimentalMaterialApi::class)
+
 package com.trungkieu.pointofinterest.features.home.ui.composable
 
+import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.DismissDirection
+import androidx.compose.material.DismissValue
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.SwipeToDismiss
+import androidx.compose.material.rememberDismissState
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -28,9 +45,11 @@ import com.trungkieu.data.features.categories.model.CategoryType
 import com.trungkieu.pointofinterest.R
 import com.trungkieu.pointofinterest.features.categories.ui.models.CategoryUiModel
 import com.trungkieu.pointofinterest.features.home.ui.models.PoiListItem
+import com.trungkieu.pointofinterest.ui.composables.uikit.DismissBackground
 import com.trungkieu.pointofinterest.ui.composables.uikit.PulsingProgressBar
 import com.trungkieu.pointofinterest.ui.theme.PointOfInterestTheme
 import com.trungkieu.pointofinterest.ui.theme.WarmGray400
+import kotlinx.coroutines.delay
 
 @Composable
 fun AddMoreButton(text: String? = null, onClick: () -> Unit) {
@@ -132,115 +151,164 @@ fun CategoryFilterChips(
 }
 
 
+/**
+ * Poi card : từng item hiển thị trong màn hình home
+ *
+ * @param modifier
+ * @param poiListItem
+ * @param onClick
+ * @receiver
+ */
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun PoiCard(
     modifier: Modifier = Modifier,
     poiListItem: PoiListItem,
-    onClick: (String) -> Unit
+    onClick: (String) -> Unit,
+    onRemove: (PoiListItem) -> Unit
 ) {
-    ElevatedCard(
-        onClick = { onClick(poiListItem.id) },
-        modifier = modifier.background(MaterialTheme.colorScheme.background),
-        elevation = CardDefaults.elevatedCardElevation(),
-        colors = CardDefaults.elevatedCardColors(
-            containerColor = MaterialTheme.colorScheme.surface,
-            contentColor = MaterialTheme.colorScheme.onBackground,
-            disabledContainerColor = MaterialTheme.colorScheme.surface,
-            disabledContentColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
-        )
+    // Nếu Show = true thì item sẽ hiện, show = false thì item sẽ ẩn. và AnimatedVisibility sẽ listen theo giá trị show
+    var show by remember { mutableStateOf(true) }
+    var dismissState = rememberDismissState(
+        confirmStateChange = {
+            if (it == DismissValue.DismissedToEnd || it == DismissValue.DismissedToStart ) {
+                show = false
+                true
+            } else false
+        }
+    )
 
+    AnimatedVisibility(
+        show,exit = fadeOut(spring())
     ) {
-
-        Column {
-
-            Row {
-
-                if (poiListItem.imageUrl.isNullOrEmpty().not()) {
-                    SubcomposeAsyncImage(
-                        modifier = Modifier.size(112.dp),
-                        model = poiListItem.imageUrl,
-                        contentScale = ContentScale.Crop,
-                        contentDescription = "",
-                        loading = { PulsingProgressBar() }
+        SwipeToDismiss(
+            state = dismissState,
+            modifier = Modifier,
+            // chỉnh hướng vuốt, mặc định sẽ vuốt bên trái hoặc phải
+            directions = setOf(DismissDirection.EndToStart),
+            background = {
+                DismissBackground(dismissState)
+            },
+            dismissContent = {
+                ElevatedCard(
+                    onClick = { onClick(poiListItem.id) },
+                    modifier = modifier.background(MaterialTheme.colorScheme.background),
+                    elevation = CardDefaults.elevatedCardElevation(),
+                    colors = CardDefaults.elevatedCardColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        contentColor = MaterialTheme.colorScheme.onBackground,
+                        disabledContainerColor = MaterialTheme.colorScheme.surface,
+                        disabledContentColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
                     )
 
-                    Spacer(modifier = Modifier.size(8.dp))
-                }
+                ) {
 
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        text = poiListItem.title,
-                        style = MaterialTheme.typography.titleSmall,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis,
-                        lineHeight = 18.sp
-                    )
-                    Spacer(modifier = Modifier.size(8.dp))
-                    if (poiListItem.subtitle != null)
-                        Text(
-                            text = poiListItem.subtitle,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onBackground,
-                            maxLines = 4,
-                            overflow = TextOverflow.Ellipsis
-                        )
+                    Column {
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                        Row {
 
-                    FlowRow(mainAxisSpacing = 4.dp, crossAxisSpacing = 2.dp) {
-                        poiListItem.categories.forEach {
-                            CategoryDisplayChips(categoryListItem = it, size = ChipSizeDefaults.smallChip())
+                            if (poiListItem.imageUrl.isNullOrEmpty().not()) {
+                                SubcomposeAsyncImage(
+                                    modifier = Modifier.size(112.dp),
+                                    model = poiListItem.imageUrl,
+                                    contentScale = ContentScale.Crop,
+                                    contentDescription = "",
+                                    loading = { PulsingProgressBar() }
+                                )
+
+                                Spacer(modifier = Modifier.size(8.dp))
+                            }
+
+                            Column(modifier = Modifier.padding(16.dp)) {
+                                Text(
+                                    text = poiListItem.title,
+                                    style = MaterialTheme.typography.titleSmall,
+                                    color = MaterialTheme.colorScheme.onBackground,
+                                    maxLines = 2,
+                                    overflow = TextOverflow.Ellipsis,
+                                    lineHeight = 18.sp
+                                )
+                                Spacer(modifier = Modifier.size(8.dp))
+                                if (poiListItem.subtitle != null)
+                                    Text(
+                                        text = poiListItem.subtitle,
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onBackground,
+                                        maxLines = 4,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+
+                                Spacer(modifier = Modifier.height(16.dp))
+
+                                FlowRow(mainAxisSpacing = 4.dp, crossAxisSpacing = 2.dp) {
+                                    poiListItem.categories.forEach {
+                                        CategoryDisplayChips(categoryListItem = it, size = ChipSizeDefaults.smallChip())
+                                    }
+                                }
+                            }
+                        }
+
+                        Row(Modifier.padding(16.dp)) {
+
+                            Text(
+                                modifier = Modifier.weight(1f),
+                                text = poiListItem.source.takeIf { it.isNullOrEmpty().not() } ?: "",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
+                                textAlign = TextAlign.Start,
+                                fontWeight = FontWeight.Medium,
+                                textDecoration = TextDecoration.Underline
+                            )
+
+                            Spacer(modifier = Modifier.size(8.dp))
+
+                            Text(
+                                text = poiListItem.modifiedDate,
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
+                                textAlign = TextAlign.End,
+                                fontWeight = FontWeight.Medium
+                            )
+
+                            Spacer(modifier = Modifier.size(8.dp))
+
+                            Row {
+                                Icon(
+                                    modifier = Modifier
+                                        .size(12.dp)
+                                        .align(CenterVertically),
+                                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_comment),
+                                    contentDescription = "Personal notes count",
+                                    tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
+                                )
+                                Spacer(modifier = Modifier.size(2.dp))
+                                Text(
+                                    text = poiListItem.commentsCount.toString(),
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
+                                    textAlign = TextAlign.End,
+                                    fontWeight = FontWeight.Medium
+                                )
+                            }
                         }
                     }
                 }
             }
+        )
+    }
+    val context = LocalContext.current
 
-            Row(Modifier.padding(16.dp)) {
-
-                Text(
-                    modifier = Modifier.weight(1f),
-                    text = poiListItem.source.takeIf { it.isNullOrEmpty().not() } ?: "",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
-                    textAlign = TextAlign.Start,
-                    fontWeight = FontWeight.Medium,
-                    textDecoration = TextDecoration.Underline
-                )
-
-                Spacer(modifier = Modifier.size(8.dp))
-
-                Text(
-                    text = poiListItem.modifiedDate,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
-                    textAlign = TextAlign.End,
-                    fontWeight = FontWeight.Medium
-                )
-
-                Spacer(modifier = Modifier.size(8.dp))
-
-                Row {
-                    Icon(
-                        modifier = Modifier
-                            .size(12.dp)
-                            .align(CenterVertically),
-                        imageVector = ImageVector.vectorResource(id = R.drawable.ic_comment),
-                        contentDescription = "Personal notes count",
-                        tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
-                    )
-                    Spacer(modifier = Modifier.size(2.dp))
-                    Text(
-                        text = poiListItem.commentsCount.toString(),
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
-                        textAlign = TextAlign.End,
-                        fontWeight = FontWeight.Medium
-                    )
-                }
-            }
+    // Khi show thay đổi thì LaunchedEffect sẽ khởi chạy
+    LaunchedEffect(show) {
+        if (!show) {
+            delay(800)
+            onRemove(poiListItem)
+            Toast.makeText(context, "Item removed", Toast.LENGTH_SHORT).show()
         }
     }
+
+
+
 }
 
 data class ChipSize(
@@ -294,12 +362,12 @@ fun HomeScreenItemsPreview() {
             ) {
                 mockItems.forEach {
                     CategoryFilterChips(categoryListItem = it)
-                    //Spacer(modifier = Modifier.size(2.dp))
-                }
+                    //Spacer(modifier = Modifier.size(2.dp)){}
+            }
             }
 
             Spacer(modifier = Modifier.size(16.dp))
-            PoiCard(poiListItem = mockPoiItem, onClick = {})
+            PoiCard(poiListItem = mockPoiItem, onClick = {}, onRemove = {})
         }
     }
 }

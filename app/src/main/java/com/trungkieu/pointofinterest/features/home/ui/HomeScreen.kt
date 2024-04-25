@@ -1,5 +1,6 @@
 package com.trungkieu.pointofinterest.features.home.ui
 
+import android.util.Log
 import androidx.compose.animation.*
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -90,7 +91,8 @@ fun HomeScreen(
         onRetry = viewModel::onRetry,
         onApplySortByOption = viewModel::onApplySortBy,
         onCloseSortDialog = onCloseSortDialog,
-        onNavigate = onNavigate
+        onNavigate = onNavigate,
+        onRemove = viewModel::onDeletePoi
     )
 }
 
@@ -105,7 +107,8 @@ fun HomeScreenContent(
     onRetry: () -> Unit,
     onApplySortByOption: (PoiSortByUiOption) -> Unit,
     onCloseSortDialog: () -> Unit,
-    onNavigate: (Screen, List<Pair<String, Any>>) -> Unit
+    onNavigate: (Screen, List<Pair<String, Any>>) -> Unit,
+    onRemove: (PoiListItem) -> Unit
 ) {
     // trước tiên phải tạo một column vói các tông số được định nghĩa trong Modifier từ height, weight và background
     Column(
@@ -177,29 +180,51 @@ fun HomeScreenContent(
                         if (targetState) { // Nếu targetState == true, tức là sẽ hiển thị một nội dung cụ thể là cái EmptyView
                             EmptyView(message = stringResource(id = R.string.message_ui_state_empty_main_screen_no_filters))
                         } else { // ngược lại
-                            PoiListContent(poiItems = filteredList) { id -> // id này sẽ là string được trả về khi thực hiện hành động onSelected
-                                // onNavigate là một hàm callback, gán các giá trị Screen.ViewPoiDetailed và listOf(Screen.ViewPoiDetailed.ARG_POI_ID to id)
-                                // và sẽ được xử lý tại PoiStateApp.navigate
-                                onNavigate(
-                                    Screen.ViewPoiDetailed,
-                                    // code này tạo ra một danh sách chứa một cặp key-value.
-                                    // listOf: Hàm tạo danh sách trong Kotlin.
-                                    // creen.ViewPoiDetailed.ARG_POI_ID: Key là một biến static được định nghĩa trong class Screen.ViewPoiDetailed
-                                    // sử dụng key static Screen.ViewPoiDetailed.ARG_POI_ID giúp đảm bảo rằng danh sách luôn chứa giá trị id mới nhất.
-                                    // và tại hàm xử lý ở class PoitateApp với hàm navigateTo sẽ tạo thành một chuỗi ký tự dài
-                                    // vd : ARG_POI_ID = "poiId". thì sẽ tạo thành các chuỗi "...poiId_20,poiId_21,poiId_22..."
-                                    // hàm sẽ tạo route = "ViewPoiDetailed?poi_id=123"
-                                    /**
-                                     * val pair = "name" to "John Doe"
-                                     *
-                                     * println(pair.first) // name
-                                     * println(pair.second) // John Doe
-                                     *
-                                     * */
-                                    // đây là cách giải thích bên dưới
-                                    listOf(Screen.ViewPoiDetailed.ARG_POI_ID to id)
-                                )
-                            }
+//                            PoiListContent(poiItems = filteredList) { id -> // id này sẽ là string được trả về khi thực hiện hành động onSelected
+//                                // onNavigate là một hàm callback, gán các giá trị Screen.ViewPoiDetailed và listOf(Screen.ViewPoiDetailed.ARG_POI_ID to id)
+//                                // và sẽ được xử lý tại PoiStateApp.navigate
+//                                onNavigate(
+//                                    Screen.ViewPoiDetailed,
+//                                    // code này tạo ra một danh sách chứa một cặp key-value.
+//                                    // listOf: Hàm tạo danh sách trong Kotlin.
+//                                    // creen.ViewPoiDetailed.ARG_POI_ID: Key là một biến static được định nghĩa trong class Screen.ViewPoiDetailed
+//                                    // sử dụng key static Screen.ViewPoiDetailed.ARG_POI_ID giúp đảm bảo rằng danh sách luôn chứa giá trị id mới nhất.
+//                                    // và tại hàm xử lý ở class PoitateApp với hàm navigateTo sẽ tạo thành một chuỗi ký tự dài
+//                                    // vd : ARG_POI_ID = "poiId". thì sẽ tạo thành các chuỗi "...poiId_20,poiId_21,poiId_22..."
+//                                    // hàm sẽ tạo route = "ViewPoiDetailed?poi_id=123"
+//                                    /**
+//                                     * val pair = "name" to "John Doe"
+//                                     *
+//                                     * println(pair.first) // name
+//                                     * println(pair.second) // John Doe
+//                                     *
+//                                     * */
+//                                // với id là 2 sẽ có ouput là : [(poiId, 2)]
+//                                // với id là 1 sẽ có ouput là : [(poiId, 1)]
+//                                    listOf(Screen.ViewPoiDetailed.ARG_POI_ID to id)
+
+//                                )
+//                                Log.e("TAG", "id detailed point 1 :" +  id)
+//                                Log.e("TAG", "id detailed point 2 :" +  listOf(Screen.ViewPoiDetailed.ARG_POI_ID to id))
+//                            }
+
+//                            PoiListContent(poiItems = filteredList) { id ->
+//                                    Log.e("TAG", "id detailed point 1 :" +  id)
+//                                    Log.e("TAG", "id detailed point 2 :" +  listOf(Screen.ViewPoiDetailed.ARG_POI_ID to id))
+//                            }
+
+                            PoiListContent(
+                                poiItems = filteredList,
+                                onPoiSelected = { id ->
+                                    onNavigate(Screen.ViewPoiDetailed, listOf(Screen.ViewPoiDetailed.ARG_POI_ID to id))
+                                    Log.e("TAG", "id detailed point 1 :" +  id)
+                                    Log.e("TAG", "id detailed point 2 :" +  listOf(Screen.ViewPoiDetailed.ARG_POI_ID to id))
+                                },
+                                onRemove = { item ->
+                                    onRemove(item)
+                                }
+                            )
+
                         }
                     }
                 }
@@ -318,7 +343,8 @@ fun HomeScreenContent(
 fun PoiListContent(
     poiItems: List<PoiListItem>,
     onPoiSelected: (String) -> Unit,
-) {
+    onRemove: (PoiListItem) -> Unit,
+    ) {
     // LazyColumn là một component trong Compose UI được sử dụng để tạo danh sách cuộn theo chiều dọc.
     LazyColumn(
         modifier = Modifier.testTag("poi_content_list")
@@ -329,7 +355,7 @@ fun PoiListContent(
         // item -> item.id: Lấy id của mỗi POI trong poiItems làm mã định danh.
         items(poiItems, key = { item -> item.id }) { item ->
             Column(modifier = Modifier.animateItemPlacement()) {
-                PoiCard(poiListItem = item, onClick = onPoiSelected)
+                PoiCard(poiListItem = item, onClick = onPoiSelected, onRemove = onRemove)
                 Spacer(modifier = Modifier.height(8.dp))
             }
         }
